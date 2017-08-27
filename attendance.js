@@ -1,6 +1,10 @@
-var page = require('webpage').create();
-let steps = [],
-    textIndex = 0,
+console.log('Starting...');
+var page = require('webpage').create(),
+    fs = require('fs'),
+    passwd = fs.read('./passwd.txt').replace(/\s/g, ''),
+    email = fs.read('./email.txt').replace(/\s/g, ''),
+    steps = [],
+    index = 0,
     loading = false;
 
 //  page settings
@@ -18,20 +22,47 @@ page.onConsoleMessage = function (str) {
 steps = [
     //  open the login page
     function () {
-        console.log('At sign-in page');
+        console.log('Going to sign-in page');
         page.open("https://stackoverflow.com/users/login?ssrc=head&returnurl=https%3a%2f%2fstackoverflow.com%2fusers%2f7232773%2fm-davis", function (st) {
-            console.log(st);
-        }
+            if (st === 'success')
+                console.log('At sign-in page');
+        });
     },
-    //  send the form
+    //  populate the form
     function () {
-
+        console.log('Populating form');
+        page.evaluate(function (email, pass) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = pass;
+            document.getElementById('login-form').submit();
+        }, email, passwd);
+    },
+    //  draw the page to which phantom is redirected
+    function () {
+        console.log('Rendering page')
+        page.render('today.png');
     }
 ];
 
-page.open('http://stackoverflow.com/', function () {
-    console.log('Status: ' + status)
-    if (status === "Success")
-        page.render('today.png');
-    phantom.exit();
+var interval = setInterval(executeReqs, 50);
+
+function executeReqs() {
+    if (loading === false && typeof steps[index] === 'function') {
+        steps[index]();
+        index++;
+    }
+    if (typeof steps[index] !== 'function') {
+        console.log('Check-in completed');
+        phantom.exit();
+    }
+}
+
+page.onLoadStarted = function () {
+    loading = true;
+    console.log('Loading...');
+}
+
+page.onLoadFinished = function () {
+    loading = false;
+    console.log('Loaded');
 }
