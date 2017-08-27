@@ -5,7 +5,8 @@ var page = require('webpage').create(),
     email = fs.read('./email.txt').replace(/\s/g, ''),
     steps = [],
     index = 0,
-    loading = false;
+    loading = false,
+    date = new Date();
 
 //  page settings
 page.settings.userAgent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36';
@@ -39,8 +40,12 @@ steps = [
     },
     //  draw the page to which phantom is redirected
     function () {
-        console.log('Rendering page')
-        page.render('today.png');
+        console.log('Logging check-in...')
+        var prog = page.evaluate(function () {
+            return document.getElementsByClassName('-count')[1].innerText.match(/\d+/)[0];
+        });
+        var output = date.toString() + ': Fanatic badge is now at ' + prog + ' days.\n';
+        fs.write('log.txt', output, 'a');
     }
 ];
 
