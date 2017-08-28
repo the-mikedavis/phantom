@@ -1,0 +1,1 @@
+phantomjs ~/phantom/attendance.js
