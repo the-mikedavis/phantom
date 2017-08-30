@@ -1,9 +1,9 @@
 console.log('Starting...');
 var page = require('webpage').create(),
     fs = require('fs'),
-    home = '/Users/michael/phantom',
-    passwd = fs.read(home + '/passwd.txt').replace(/\s/g, ''),
-    email = fs.read(home + '/email.txt').replace(/\s/g, ''),
+    home = '/Users/michael/phantom/',
+    passwd = fs.read(home + 'passwd.txt').replace(/\s/g, ''),
+    email = fs.read(home + 'email.txt').replace(/\s/g, ''),
     steps = [],
     index = 0,
     loading = false,
@@ -47,7 +47,7 @@ steps = [
         });
         var output = date.toString() + ': Fanatic badge is now at ' + prog + ' days.';
         console.log(output);
-        fs.write('log.txt', output, 'a');
+        fs.write(home+'log.txt', output, 'a');
     }
 ];
 
