@@ -1,7 +1,7 @@
 console.log('Starting...');
 var page = require('webpage').create(),
     fs = require('fs'),
-    home = '/home/mcarsondavis/phantom',
+    home = '/Users/michael/phantom',
     passwd = fs.read(home + '/passwd.txt').replace(/\s/g, ''),
     email = fs.read(home + '/email.txt').replace(/\s/g, ''),
     steps = [],
@@ -45,7 +45,7 @@ steps = [
         var prog = page.evaluate(function () {
             return document.getElementsByClassName('-count')[1].innerText.match(/\d+/)[0];
         });
-        var output = date.toString() + ': Fanatic badge is now at ' + prog + ' days.\n';
+        var output = date.toString() + ': Fanatic badge is now at ' + prog + ' days.';
         console.log(output);
         fs.write('log.txt', output, 'a');
     }
